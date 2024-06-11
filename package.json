@@ -1,0 +1,16 @@
+{
+  "name": "mini-blog-platform",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start":"nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express-fileupload": "^1.5.0",
+    "express.js": "^1.0.0",
+    "nodemon": "^3.1.3"
+  }
+}
