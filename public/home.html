@@ -7,8 +7,30 @@
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
-    <div class = navbar>
-        <ul class = "title">Blogger</ul>
+    <div class="navBar">
+        <ul>//Blogger.</ul>
+        <ul>Home</ul>
+        <ul>Explore</ul>
+        <ul class="ComposeBtn">Start Writing</ul>
+        <button class="SignInBtn">
+            Sign in
+        </button>
     </div>
+    <div class="composeOverlay" id="compose">
+        <h2>newBlod</h2>
+        <button id="closeOverlay">close</button>
+        <input type="text" id="heading" placeholder="heading">
+        <input type="text" id="tags" placeholder="tags">
+        <input type="text" id="content" placeholder="content">
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" accept="image/*" >
+        <button id="saveDraft">Save Draft</button>
+        <button id="postBlog">Post Blog</button>
+    </div>
+    <div class="mainBanner">
+        <img src="images/LandingPage/Main Banner.png" class="mainBannerImg">
+    </div>
+
+    <script src="js/home.js"></script>
 </body>
 </html>
