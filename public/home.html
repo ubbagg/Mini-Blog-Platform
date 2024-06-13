@@ -9,27 +9,44 @@
 <body>
     <div class="navBar">
         <ul>//Blogger.</ul>
-        <ul>Home</ul>
-        <ul>Explore</ul>
+        <ul><a href="home.html">Home</a></ul>
+        <ul><a href="blog.html">Explore</a> </ul>
         <ul class="ComposeBtn">Start Writing</ul>
-        <button class="SignInBtn">
-            Sign in
-        </button>
+        <button class="SignInBtn"><a href="login.html">Sign in</a> </button>
     </div>
-    <div class="composeOverlay" id="compose">
-        <h2>newBlod</h2>
-        <button id="closeOverlay">close</button>
-        <input type="text" id="heading" placeholder="heading">
-        <input type="text" id="tags" placeholder="tags">
-        <input type="text" id="content" placeholder="content">
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" accept="image/*" >
-        <button id="saveDraft">Save Draft</button>
-        <button id="postBlog">Post Blog</button>
-    </div>
+
     <div class="mainBanner">
-        <img src="images/LandingPage/Main Banner.png" class="mainBannerImg">
+        <img src="images/LandingPage/Main Banner.png" class="mainBannerImg" alt="mainBanner">
     </div>
+
+    <div class="recentBlogs">
+        <h2>recent blogs</h2>
+        <input type="search" placeholder="search">
+        <div class="blogBanner" id="blogBannerTemplate">
+            <img src=" " class="profile pic" alt="Profile Picture">
+            <ul class="username"></ul>
+            <ul class="description"></ul>
+            <ul class="date"></ul>
+            <h4 class="heading"></h4>
+            <h6 class="content"></h6>
+            <ul class="tags"></ul>
+        </div>
+    </div>
+
+    <div class="composeOverlay" id="compose">
+        <h2>newBlog</h2>
+        <button id="closeOverlay">close</button>
+        <form id="newBlogForm" enctype="multipart/form-data">
+            <input type="text" id="heading" name="heading" placeholder="heading" required>
+            <input type="text" id="tags" name="tags" placeholder="Tags (comma-separated)" required>
+            <textarea id="content" name="content" placeholder="content" required></textarea>
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <!-- <button id="saveDraft">Save Draft</button> -->
+            <button type="submit">Post Blog</button>
+        </form>
+    </div>
+    
 
     <script src="js/home.js"></script>
 </body>

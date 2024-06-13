@@ -10,31 +10,54 @@ document.addEventListener('DOMContentLoaded', function() {
     closeOverlayBtn.addEventListener('click', function(){
         overlay.style.display= 'none';
     });
+    loadRecentBlogs();
 });
 
-document.getElementById('signUp').addEventListener('click', async function () {
-    const user = {
-        fullname: document.getElementById('fullname').value,
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        mobileno: document.getElementById('mobileno').value,
-        dateofbirth: document.getElementById('dateofbirth').value,
-        password: document.getElementById('password').value,
-        profilepic: document.getElementById('profilepic').value // Handle file upload separately
-    };
+document.getElementById('newBlogForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-    const response = await fetch('/api/users/signup', {
+    const formData = new FormData(this);
+
+    const response = await fetch('/api/posts', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user)
+        body: formData
     });
 
     if (response.ok) {
         const result = await response.json();
-        console.log('User signed up:', result);
+        console.log('Blog posted:', result);
+        // Close overlay and reload recent blogs
+        document.getElementById('compose').style.display = 'none';
+        loadRecentBlogs();
     } else {
-        console.error('Failed to sign up:', response.statusText);
+        console.error('Failed to post blog:', response.statusText);
     }
 });
+
+async function loadRecentBlogs() {
+    const response = await fetch('/api/posts');
+    if (response.ok) {
+        const blogs = await response.json();
+        const blogBannerTemplate = document.getElementById('blogBannerTemplate');
+        const recentBlogsDiv = document.querySelector('.recentBlogs');
+
+        // Clear existing blogs
+        recentBlogsDiv.innerHTML = '<h2>Recent Blogs</h2><input type="search" placeholder="search">';
+
+        blogs.forEach(blog => {
+            const blogBanner = blogBannerTemplate.cloneNode(true);
+            blogBanner.style.display = 'block';
+            blogBanner.querySelector('.profilepic').src = blog.author.profilepic;
+            blogBanner.querySelector('.username').innerText = blog.author.username;
+            blogBanner.querySelector('.description').innerText = blog.content.substring(0, 100) + '...';
+            blogBanner.querySelector('.date').innerText = new Date(blog.createdAt).toLocaleDateString();
+            blogBanner.querySelector('.heading').innerText = blog.heading;
+            blogBanner.querySelector('.content').innerText = blog.content;
+            blogBanner.querySelector('.tags').innerText = blog.tags.join(', ');
+
+            recentBlogsDiv.appendChild(blogBanner);
+        });
+    } else {
+        console.error('Failed to load blogs:', response.statusText);
+    }
+}
