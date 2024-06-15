@@ -1,9 +1,9 @@
-const { profile } = require('console');
+// const { profile } = require('console');
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     fullname: String,
-    usrname: String,
+    username: String,
     email: String,
     mobileno: String,
     dateofbirth: Date,

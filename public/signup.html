@@ -4,21 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="css/signup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <form id="signupForm" enctype="multipart/form-data">
-        <h2>signUp</h2>
-        <input type="text" id="fullname" name="fullname" placeholder="fullname" required>
-        <input type="text" id="username" name="username" placeholder="username" required>
-        <input type="email" id="email" name="email" placeholder="email" required>
-        <input type="tel" id="mobileno" name="mobileno" placeholder="mobileno" required>
-        <input type="date" id="dateofbirth" name="dateofbirth" placeholder="dateofbirth" required>
-        <input type="password" id="password" name="password" placeholder="password" required>
-        <label for="profilepic">Upload Image:</label>
-        <input type="file" id="profilepic" name="profilepic" accept="image/*" required>
-        <button type="submit" id="signUp">signup</button>
-    </form>
-    <ul><a href="login.html">login</a></ul>
+    <div class="navBar">
+        <ul class="nav-logo">//Blogger.</ul>
+    </div>
+    <div class="container">
+        <img src="images/SignupImg.jpg" class="SignupImg" alt="SignupImg">
+        <form class="signupForm" id="signupForm" enctype="multipart/form-data">
+            <p1>Sign Up Account</p1>
+            <p2>Enter your personal data to create your account.</p2>
+            <div class="div1">
+                <div class="set1">
+                    <label class="label" for="fullname">Full Name</label>
+                    <input class="input" type="text" id="fullname" name="fullname" placeholder="eg. John Wick" required>
+                </div>
+                <div class="set1">
+                    <label class="label" for="username">User Name</label>
+                    <input class="input" type="text" id="username" name="username" placeholder="eg. Johnny" required>
+                </div>
+            </div>
+            <div class="div2">
+            <label class="label" for="email">Email</label>
+            <input class="input2" type="email" id="email" name="email" placeholder="eg. johnwick@gmail.com" required>
+            </div>
+            <div class="div1">
+                <div class="set1">
+                    <label class="label" for="mobileno">Mobile Number</label>
+                    <input class="input" type="tel" id="mobileno" name="mobileno" placeholder="eg. +91 98765432**" required>
+                </div>
+                <div class="set1">
+                    <label class="label" for="dateofbirth">Date of birth</label>
+                    <input class="input" type="date" id="dateofbirth" name="dateofbirth" placeholder="dateofbirth" required>
+                </div>
+            </div>
+            <div class="div2">
+            <label class="label" for="password">Password</label>
+            <input class="input2" type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="div2">
+            <label class="label" for="profilepic">Profile Pic</label>
+            <input class="input2" type="file" id="profilepic" name="profilepic" accept="image/*" required>
+            </div>
+            <button type="submit" id="signUp" class="signUp">Sign Up</button>
+        <p2>Alread have an account? <a href="login.html">Log in</a></p2>
+        </form>
+    </div>
+
     <script src="js/signup.js"></script>
 </body>
 </html>

@@ -5,14 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blogger</title>
     <link rel="stylesheet" href="css/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Righteous&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="navBar">
-        <ul>//Blogger.</ul>
-        <ul><a href="home.html">Home</a></ul>
-        <ul><a href="blog.html">Explore</a> </ul>
-        <ul class="ComposeBtn">Start Writing</ul>
-        <button class="SignInBtn"><a href="login.html">Sign in</a> </button>
+        <ul class="nav-logo">//Blogger.</ul>
+        <div class="navs">
+            <ul><a href="home.html">Home</a></ul>
+            <ul><a href="blog.html">Explore</a> </ul>
+            <ul class="ComposeBtn">Start Writing</ul>
+            <ul class="user-name"></ul>
+            <button class="SignInBtn" id="SignInBtn"><a href="login.html">Sign in</a> </button>
+            <button class="SignOutBtn" id="SignOutBtn" style="display: none;">Sign out</button>
+        </div>
     </div>
 
     <div class="mainBanner">
@@ -20,10 +33,12 @@
     </div>
 
     <div class="recentBlogs">
-        <h2>recent blogs</h2>
-        <input type="search" placeholder="search">
-        <div class="blogBanner" id="blogBannerTemplate">
-            <img src=" " class="profile pic" alt="Profile Picture">
+        <div class="blog-search">
+            <p>recent blogs</p>
+            <input type="search" class="search" placeholder="Search">
+        </div>
+        <div class="blogBanner" id="blogBannerTemplate" style="display: none;">
+            <img src=" " class="profilepic" alt="Profile Picture">
             <ul class="username"></ul>
             <ul class="description"></ul>
             <ul class="date"></ul>
@@ -33,7 +48,7 @@
         </div>
     </div>
 
-    <div class="composeOverlay" id="compose">
+    <div class="composeOverlay" id="compose" style="display: none;">
         <h2>newBlog</h2>
         <button id="closeOverlay">close</button>
         <form id="newBlogForm" enctype="multipart/form-data">
@@ -47,7 +62,48 @@
         </form>
     </div>
     
+    <footer>
+        <div class="footer-content">
+            <div class="footer-para">
+                <p1>Lorem ispum<br>dolor sit amet consectetur.</p1>
+                <p2>Lorem ipsum dolor sit amet consectetur.<br>Euismod vulputate auctor eros diam interdum.</p2>
+                <button class="PostBtn" id="PostBtn"><a href="#composr">Start Writing</a> </button>
+            </div>
+            <div class="footer-main">
+                <div class="footer-main-1">
+                    <ul class="nav-logo">//Blogger.</ul>
+                    <p>Lorem ipsum dolor sit amet consectetur. Vitae cras quis nibh ut rhoncus ante vestibulum quis. Urna elementum tincidunt tellus ac commodo tortor sem tortor nibh. Lorem molestie aliquet.</p>
+                </div>
+                <div class="footer-main-2">
+                    <a class="Footer-links-header">NAVIGATION</a>
+                    <a class="Footer-links-body">Home</a>
+                    <a class="Footer-links-body">Explore</a>
+                    <a class="Footer-links-body">Blog</a>
+                </div>
+                <div class="footer-main-2">
+                    <a class="Footer-links-header">SUPPOPRT</a>
+                    <a class="Footer-links-body">Contact Us</a>
+                    <a class="Footer-links-body">Documentation</a>
+                    <a class="Footer-links-body">Privacy Policy</a>
+                </div>
+                <div class="footer-main-2">
+                    <a class="Footer-links-header">SOCIALS</a>
+                    <a class="Footer-links-body">Instagram</a>
+                    <a class="Footer-links-body">Twitter</a>
+                    <a class="Footer-links-body">Linkedin</a>
+                </div>
+            </div>
+            <div class="bottom">
+                <P>Copyright @2024 - Blogger</P>
+                <button class="PostBtn" id="PostBtn"><a href="#compose">Start Writing</a> </button>
+            </div>
+        </div>
+        <img src="images/LandingPage/Bottom.png" class="footerImg">z
+    </footer>
 
     <script src="js/home.js"></script>
+    <!-- <script src="js/blog.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/signup.js"></script> -->
 </body>
 </html>

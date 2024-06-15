@@ -1,7 +1,28 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    const signInButton = document.getElementById('SignInButton');
+    const signOutButton = document.getElementById('SignOutButton');
+    const userNameElement = document.querySelector('.user-name');
+
+    try {
+        const response = await fetch('/user');
+        if (response.ok) {
+            const data = await response.json();
+            userNameElement.innerText = data.username;
+            signInButton.style.display = 'none';
+            signOutButton.style.display='inline-block';
+        } else {
+            userNameElement.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+
     const composeBtn = document.querySelector('.ComposeBtn');
     const overlay = document.getElementById('compose');
     const closeOverlayBtn = document.getElementById('closeOverlay');
+    const newBlogForm = document.getElementById('newBlogForm');
+    let editMode = false;
+    let editPostId = null;
 
     composeBtn.addEventListener('click', function(){
         overlay.style.display= 'flex';
@@ -10,29 +31,69 @@ document.addEventListener('DOMContentLoaded', function() {
     closeOverlayBtn.addEventListener('click', function(){
         overlay.style.display= 'none';
     });
+
+    newBlogForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const url = editMode ? `/api/posts/${editPostId}` : '/api/posts';
+        const method = editMode ? 'PUT' : 'POST';
+
+        // console.log("Form data entries:");
+        // for(const[key,value]of formData.entries()){
+        //     console.log(key, value)
+        // }
+        
+        try {
+            const response = await fetch(url, {
+                method: method,
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Blog posted:', result);
+                // Close overlay and reload recent blogs
+                overlay.style.display = 'none';
+                // window.location.href = 'blog.html'
+                loadRecentBlogs(); // Assuming this function loads recent blogs dynamically
+            } else {
+                const errorText = await response.text();
+                console.error('Failed to post blog:', response.status, errorText);
+            }
+        } catch (err) {
+            console.error('Error posting blog:', err);
+        }
+    });
+
     loadRecentBlogs();
 });
 
-document.getElementById('newBlogForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
+// document.getElementById('newBlogForm').addEventListener('submit', async function(event) {
+//     event.preventDefault();
 
-    const formData = new FormData(this);
+//     const formData = new FormData(this);
 
-    const response = await fetch('/api/posts', {
-        method: 'POST',
-        body: formData
-    });
 
-    if (response.ok) {
-        const result = await response.json();
-        console.log('Blog posted:', result);
-        // Close overlay and reload recent blogs
-        document.getElementById('compose').style.display = 'none';
-        loadRecentBlogs();
-    } else {
-        console.error('Failed to post blog:', response.statusText);
-    }
-});
+//     console.log("form data entries:");
+//     for(const [key, value] of formData.entries()){
+//         console.log(key, value);
+//     }
+
+//     const response = await fetch('/api/posts', {
+//         method: 'POST',
+//         body: formData,
+//         credentials: 'include'
+//     });
+
+//     if (response.ok) {
+//         const result = await response.json();
+//         console.log('Blog posted:', result);
+//         window.location.href='blog.html';
+//     } else {
+//         console.error('Failed to post blog:', response.statusText);
+//     }
+// });
 
 async function loadRecentBlogs() {
     const response = await fetch('/api/posts');
@@ -47,17 +108,53 @@ async function loadRecentBlogs() {
         blogs.forEach(blog => {
             const blogBanner = blogBannerTemplate.cloneNode(true);
             blogBanner.style.display = 'block';
-            blogBanner.querySelector('.profilepic').src = blog.author.profilepic;
-            blogBanner.querySelector('.username').innerText = blog.author.username;
+            if (blog.author) {
+                if (blog.author.profilepic) {
+                    blogBanner.querySelector('.profilepic').src = blog.author.profilepic;
+                } else {
+                    blogBanner.querySelector('.profilepic').src = 'default-profile-pic.jpg'; // Fallback image
+                }
+                blogBanner.querySelector('.username').innerText = blog.author.username || 'Unknown Author';
+            } else {
+                blogBanner.querySelector('.profilepic').src = 'default-profile-pic.jpg'; // Fallback image
+                blogBanner.querySelector('.username').innerText = 'Unknown Author';
+            }
+            
             blogBanner.querySelector('.description').innerText = blog.content.substring(0, 100) + '...';
             blogBanner.querySelector('.date').innerText = new Date(blog.createdAt).toLocaleDateString();
             blogBanner.querySelector('.heading').innerText = blog.heading;
             blogBanner.querySelector('.content').innerText = blog.content;
             blogBanner.querySelector('.tags').innerText = blog.tags.join(', ');
 
-            recentBlogsDiv.appendChild(blogBanner);
+            const editButton = document.createElement('button');
+                editButton.innerText = 'Edit';
+                editButton.addEventListener('click', () => {
+                    editMode = true;
+                    editPostId = blog._id;
+                    overlay.style.display = 'flex';
+                    document.getElementById('heading').value = blog.heading;
+                    document.getElementById('tags').value = blog.tags.join(', ');
+                    document.getElementById('content').value = blog.content;
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Delete';
+                deleteButton.addEventListener('click', async () => {
+                    const response = await fetch(`/api/posts/${blog._id}`, {
+                        method: 'DELETE',
+                    });
+                    if (response.ok) {
+                        loadRecentBlogs();
+                    } else {
+                        console.error('Failed to delete blog:', response.statusText);
+                    }
+                });
+
+                blogBanner.appendChild(editButton);
+                blogBanner.appendChild(deleteButton);
+                recentBlogsDiv.appendChild(blogBanner);
         });
     } else {
         console.error('Failed to load blogs:', response.statusText);
     }
-}
+};

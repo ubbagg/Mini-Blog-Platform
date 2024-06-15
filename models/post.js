@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { type } = require('os');
+// const { type } = require('os');
 
 const postSchema = new mongoose.Schema({
-    author:{
+    author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
@@ -10,10 +10,10 @@ const postSchema = new mongoose.Schema({
     tags: [String],
     content: String,
     image: String,
-    createdAt:{
+    createdAt: {
         type: Date,
         default: Date.now
     }
 });
 
-module.exports = mongoose.model('Post',postSchema);
+module.exports = mongoose.model('Post', postSchema);
