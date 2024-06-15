@@ -7,11 +7,21 @@ document.addEventListener('DOMContentLoaded', async function() {
         const response = await fetch('/user');
         if (response.ok) {
             const data = await response.json();
-            userNameElement.innerText = data.username;
-            signInButton.style.display = 'none';
-            signOutButton.style.display='inline-block';
+            if(userNameElement){
+                userNameElement.innerText = data.username;
+            }
+            if(signInButton){
+                signInButton.style.display='none';
+            }
+            if(signOutButton){
+                signOutButton.style.display='inline-block';
+            }
+            // signInButton.style.display = 'none';
+            // signOutButton.style.display='inline-block';
         } else {
-            userNameElement.style.display = 'none';
+            if (userNameElement){
+                userNameElement.style.display = 'none';
+            }
         }
     } catch (error) {
         console.error('Error fetching user data:', error);
