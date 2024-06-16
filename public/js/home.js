@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    const signInButton = document.getElementById('SignInButton');
-    const signOutButton = document.getElementById('SignOutButton');
+    const signInButton = document.getElementById('SignInBtn');
+    const signOutButton = document.getElementById('SignOutBtn');
     const userNameElement = document.querySelector('.user-name');
 
     try {
@@ -22,9 +22,31 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (userNameElement){
                 userNameElement.style.display = 'none';
             }
+            if (signInButton) {
+                signInButton.style.display = 'inline-block';
+            }
+            if (signOutButton) {
+                signOutButton.style.display = 'none';
+            }
         }
     } catch (error) {
         console.error('Error fetching user data:', error);
+    }
+
+    if (signOutButton) {
+        signOutButton.addEventListener('click', async function() {
+            try {
+                const response = await fetch('/api/users/logout', { method: 'POST' });
+                if (response.ok) {
+                    window.location.href = 'login.html';
+                } else {
+                    const errorText = await response.text();
+                    console.error('Failed to log out:', response.status, errorText);
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+            }
+        });
     }
 
     const composeBtn = document.querySelector('.ComposeBtn');

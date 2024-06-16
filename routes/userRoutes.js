@@ -20,6 +20,10 @@ router.post('/signup', upload.single('profilepic'), async (req, res) => {
         if (!fullname || !username || !email || !mobileno || !dateofbirth || !password) {
             return res.status(400).send({ error: 'All fields are required' });
         }
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).send({ error: 'Username is already taken' });
+        }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({
             fullname,
