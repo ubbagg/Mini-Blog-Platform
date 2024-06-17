@@ -1,27 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/post');
-// const multer = require('multer');
-// const User = require('../models/user');
 const upload = require('../config/multer');
-// const { Console } = require('console');
-// const { error } = require('console');
 
-//nEW POST
-router.post('/',upload.single('image'), async(req, res)=>{
-    try{
-        // console.log("Request body:", req.body);
-        // console.log("File:", req.file);
-
-        if(!req.session.userID){
-            return res.status(401).send({error: 'Unauthorized'});
+// New post
+router.post('/', upload.single('image'), async (req, res) => {
+    try {
+        if (!req.session.userID) {
+            return res.status(401).send({ error: 'Unauthorized' });
         }
-        if(!req.body.heading || !req.body.heading || !req.body.tags || !req.body.content || !req.file){
-            return res.status(400).send({error: 'All fields required'});
+        if (!req.body.heading || !req.body.tags || !req.body.content || !req.file) {
+            return res.status(400).send({ error: 'All fields required' });
         }
 
-        const newPost= new Post({
-            author: req.body.userID,
+        const newPost = new Post({
+            author: req.session.userID,
             heading: req.body.heading,
             tags: req.body.tags.split(','),
             content: req.body.content,
@@ -30,21 +23,21 @@ router.post('/',upload.single('image'), async(req, res)=>{
 
         await newPost.save();
         res.status(201).send(newPost);
-    } catch (err){
-        console.error('error creating post:', err);
-        res.status(400).send({error: err.message});
+    } catch (err) {
+        console.error('Error creating post:', err);
+        res.status(400).send({ error: err.message });
     }
-
 });
 
-//all posts
-router.get('/', async(req, res)=>{
-    try{
-        const posts = await Post.find().populate('author','username');
-        res.send(posts);
-    } catch (err){
-        console.error('error fetching posts:', err);
-        res.status(500).send({error: err.message});
+
+// All posts
+router.get('/', async (req, res) => {
+    try {
+        const posts = await Post.find().populate('author', 'username');
+        res.json(posts);
+    } catch (err) {
+        console.error('Error fetching posts:', err);
+        res.status(500).send({ error: err.message });
     }
 });
 
@@ -75,6 +68,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
             return res.status(404).send({ error: 'Post not found' });
         }
 
+        // Check if the post author is the same as the logged-in user
         if (post.author.toString() !== req.session.userID) {
             return res.status(403).send({ error: 'Forbidden' });
         }
@@ -91,7 +85,6 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         console.error('Error updating post:', err);
         res.status(400).send({ error: err.message });
     }
-
 });
 
 
@@ -117,9 +110,6 @@ router.delete('/:id', async (req, res) => {
         console.error('Error deleting post:', err);
         res.status(400).send({ error: err.message });
     }
-
 });
-
-
 
 module.exports = router;

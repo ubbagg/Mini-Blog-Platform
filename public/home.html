@@ -35,32 +35,64 @@
 
     <div class="recentBlogs">
         <div class="blog-search">
-            <p>recent blogs</p>
+            <p>recentBlogs</p>
             <input type="search" class="search" placeholder="Search">
         </div>
         <div class="blogBanner" id="blogBannerTemplate" style="display: none;">
-            <img src=" " class="profilepic" alt="Profile Picture">
-            <ul class="username"></ul>
-            <ul class="description"></ul>
-            <ul class="date"></ul>
-            <h4 class="heading"></h4>
-            <h6 class="content"></h6>
-            <ul class="tags"></ul>
+            <div class="blogBanner1">
+                <div class="user-info">
+                    <img src=" " class="profilepic" >
+                    <div class="user-info2">
+                        <div class="user-information">
+                            <span class="username"></span>
+                            <span>•</span>
+                            <span class="date"></span>
+                        </div>
+                        <div class="user-desc">
+                            <span class="description"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="blog-info">
+                    <h4 class="heading"></h4>
+                    <h6 class="content"></h6>
+                    <span class="tags"></span>
+                </div>
+                
+                <div class="blog-buttons">
+                    <button class="editBtn">Edit</button>
+                    <button class="deleteBtn">Delete</button>
+                </div>
+            </div>    
+            <div class="blog-pic">
+                <img src="" class="blogpic">
+            </div>
         </div>
     </div>
 
     <div class="composeOverlay" id="compose" style="display: none;">
-        <h2>newBlog</h2>
-        <button id="closeOverlay">close</button>
-        <form id="newBlogForm" enctype="multipart/form-data">
-            <input type="text" id="heading" name="heading" placeholder="heading" required>
-            <input type="text" id="tags" name="tags" placeholder="Tags (comma-separated)" required>
-            <textarea id="content" name="content" placeholder="content" required></textarea>
-            <label for="image">Upload Image:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
-            <!-- <button id="saveDraft">Save Draft</button> -->
-            <button type="submit">Post Blog</button>
-        </form>
+        <div class="composeContainer">
+            <div class="composeContainer1">
+                <h2>newBlog</h2>
+                <button id="closeOverlay" class="closeOverlay"><img src="images/LandingPage/Close.png" alt=""></button>
+            </div>
+            <form id="newBlogForm" enctype="multipart/form-data">
+                <div class="newBlogForm1">
+                    <label class="label1" for="heading">Heading</label>
+                    <input class="input1" type="text" id="heading" name="heading" placeholder="Type here..." required>
+                    <label class="label1" for="tags">Tags</label>
+                    <input class="input1" type="text" id="tags" name="tags" placeholder="Tags (comma-separated)" required>
+                    <label class="label2" for="content">Content</label>
+                    <textarea class="input2"  id="content" name="content" placeholder="Type here..." required></textarea>
+                    <label class="label1" for="image">Picture</label>
+                    <input class="input3" type="file" id="image" name="image" accept="image/*" required>
+                </div>
+                <div class="newBlogForm2">
+                    <!-- <button id="saveDraft">Save Draft</button> -->
+                    <button type="submit" class="postBtn">Post Blog</button>
+                </div>
+            </form>
+        </div>
     </div>
     
     <footer>
@@ -68,7 +100,7 @@
             <div class="footer-para">
                 <p1>Lorem ispum<br>dolor sit amet consectetur.</p1>
                 <p2>Lorem ipsum dolor sit amet consectetur.<br>Euismod vulputate auctor eros diam interdum.</p2>
-                <button class="PostBtn" id="PostBtn"><a href="#composr">Start Writing</a> </button>
+                <button class="PostBtn" id="PostBtn"><a href="#compose">Start Writing</a> </button>
             </div>
             <div class="footer-main">
                 <div class="footer-main-1">
@@ -99,7 +131,7 @@
                 <button class="PostBtn" id="PostBtn"><a href="#compose">Start Writing</a> </button>
             </div>
         </div>
-        <img src="images/LandingPage/Bottom.png" class="footerImg">z
+        <img src="images/LandingPage/Bottom.png" class="footerImg">
     </footer>
 
     <script src="js/home.js"></script>
