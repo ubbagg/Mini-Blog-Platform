@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const recentBlogsDiv = document.querySelector('.recentBlogs');
 
             // Clear existing blogs
-            recentBlogsDiv.innerHTML = ' div class="blog-search"  p Recent Blogs /p  input type="search" class="search" placeholder="Search"  /div ';
+            recentBlogsDiv.innerHTML = '<div class="blog-search"><p>Recent Blogs</p><input type="search" class="search" placeholder="Search"></div>';
 
             // Filter blogs based on search query
             const filteredBlogs = blogs.filter(blog => {
