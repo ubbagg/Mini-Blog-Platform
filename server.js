@@ -1,67 +1,52 @@
-require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')
+const MongoStore = require('connect-mongo');
 
-
-
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Body parser middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
-let initial_path = path.join(__dirname, "public");
-app.use(express.static(initial_path));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-    if (req.url.endsWith('.css')) {
-        res.setHeader('Content-Type', 'text/css');
-    }
-    next();
-});
+// Serve static files from 'public' folder
+app.use(express.static(path.join(__dirname, "public")));
 
+// Session middleware
 app.use(session({
     secret: 'yourSecretKey',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI })
-}))
-console.log('MongoDB URI:', process.env.MONGO_URI);
+}));
 
-
-//dATABASE CONNECT
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err));
+}).then(() => {
+    console.log('Connected to MongoDB');
+}).catch(err => {
+    console.error('MongoDB connection error:', err);
+});
 
-
-//Routes
+// Routes
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
-// const db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-// db.once('open',() => {
-//     console.log('connected to MongoDB')
-// });
-
-
-//Homepage Serve
+// Homepage route
 app.get('/', (req, res) => {
-    res.sendFile(path.join(initial_path, 'home.html'));
+    res.sendFile(path.join(__dirname, 'public', 'home.html'));
 });
 
+// User route (for checking session)
 app.get('/user', (req, res) => {
     if (req.session.userID) {
         res.send({ username: req.session.username });
@@ -69,6 +54,8 @@ app.get('/user', (req, res) => {
         res.status(401).send({ error: 'Unauthorized' });
     }
 });
+
+// Start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
