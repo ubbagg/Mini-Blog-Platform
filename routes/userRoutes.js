@@ -4,7 +4,7 @@ const User = require('../models/user');
 const multer = require('multer');
 // const upload = multer({dest:'../config/multer'});
 const upload = multer({dest:'uploads/'});
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 // const { error } = require('console');
 // const session = require('express-session');
 // router.use(session({
