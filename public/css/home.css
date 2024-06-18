@@ -367,6 +367,7 @@ input::file-selector-button{
     font-size: 24px;
     font-weight: 500;
     margin: 0px;
+    cursor: pointer;
 }
 .blog-info h6{
     width: 70%;
@@ -476,6 +477,7 @@ input::file-selector-button{
     border: 1px solid rgba(51, 54,63,1);
     background-color: white;
     margin-top: 20px;
+    cursor: pointer;
 }
 .footer-para .PostBtn a{
     font-family: "Poppins", sans-serif;
@@ -555,14 +557,15 @@ input::file-selector-button{
     line-height: 21px;
     text-align: left;
 }
-.bottom .PostBtn{
+.bottom .PostBtn2{
     width: 168px;
     height: 48px;
     border-radius: 40px;
     border: 1px solid rgba(51, 54,63,1);
     background-color: white;
+    cursor: pointer;
 }
-.bottom .PostBtn a{
+.bottom .PostBtn2 a{
     font-family: "Poppins", sans-serif;
     font-size: 16px;
     font-weight: 400;

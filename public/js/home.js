@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const userNameElement = document.querySelector('.user-name');
     const overlay = document.getElementById('compose');
     const composeBtn = document.querySelector('.ComposeBtn');
+    const composeBtn2 = document.querySelector('.PostBtn');
+    const composeBtn3 = document.querySelector('.PostBtn2');
     const closeOverlayBtn = document.getElementById('closeOverlay');
     const newBlogForm = document.getElementById('newBlogForm');
     const searchInput = document.querySelector('.search');
@@ -57,7 +59,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     composeBtn.addEventListener('click', function(){
         overlay.style.display= 'flex';
     });
-
+    composeBtn2.addEventListener('click', function(){
+        overlay.style.display= 'flex';
+    });
+    composeBtn3.addEventListener('click', function(){
+        overlay.style.display= 'flex';
+    });
     closeOverlayBtn.addEventListener('click', function(){
         overlay.style.display= 'none';
     });
@@ -161,6 +168,19 @@ document.addEventListener('DOMContentLoaded', async function() {
                         console.error('Failed to delete blog:', response.statusText);
                     }
                 });
+
+                // Add click event listener to the heading to redirect to blog details page
+                const headingElement = blogBanner.querySelector('.heading');
+                headingElement.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    window.location.href = `blog.html?id=${blog._id}`;
+                });
+
+                // // Add click event listener to redirect to blog details page
+                // blogBanner.addEventListener('click', () => {
+                //     window.location.href = `blog.html?id=${blog._id}`;
+                // });
+
                 recentBlogsDiv.appendChild(blogBanner);
             });
         } else {

@@ -10,7 +10,6 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')
 
 
-let initial_path = path.join(__dirname, "public");
 
 dotenv.config();
 
@@ -19,8 +18,15 @@ const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+let initial_path = path.join(__dirname, "public");
 app.use(express.static(initial_path));
 
+app.use((req, res, next) => {
+    if (req.url.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css');
+    }
+    next();
+});
 
 app.use(session({
     secret: 'yourSecretKey',
