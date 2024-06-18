@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     }
                 });
 
-                // Add click event listener to the heading to redirect to blog details page
+                    // Add click event listener to the heading to redirect to blog details page
                 const headingElement = blogBanner.querySelector('.heading');
                 headingElement.addEventListener('click', (event) => {
                     event.preventDefault();
