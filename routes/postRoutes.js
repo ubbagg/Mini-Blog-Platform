@@ -93,23 +93,48 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         if (!req.session.userID) {
+            console.log('No user ID in session');
             return res.status(401).send({ error: 'Unauthorized' });
         }
+
         const { id } = req.params;
         const post = await Post.findById(id);
 
         if (!post) {
+            console.log('Post not found');
             return res.status(404).send({ error: 'Post not found' });
         }
-        if (post.author.toString() !== req.session.userID) {
+
+        if (!post.author || post.author.toString() !== req.session.userID) {
+            console.log(`Post author: ${post.author}, User ID: ${req.session.userID}`);
             return res.status(403).send({ error: 'Forbidden' });
         }
-        await post.remove();
+
+        await Post.findByIdAndDelete(id);
         res.send({ message: 'Post deleted' });
     } catch (err) {
         console.error('Error deleting post:', err);
         res.status(400).send({ error: err.message });
     }
 });
+
+// delete when user is not defined
+// router.delete('/:id', async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const post = await Post.findById(id);
+
+//         if (!post) {
+//             console.log('Post not found');
+//             return res.status(404).send({ error: 'Post not found' });
+//         }
+
+//         await Post.findByIdAndDelete(id);
+//         res.send({ message: 'Post deleted' });
+//     } catch (err) {
+//         console.error('Error deleting post:', err);
+//         res.status(400).send({ error: err.message });
+//     }
+// });
 
 module.exports = router;

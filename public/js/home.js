@@ -2,10 +2,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     const signInButton = document.getElementById('SignInBtn');
     const signOutButton = document.getElementById('SignOutBtn');
     const userNameElement = document.querySelector('.user-name');
-    const overlay = document.getElementById('compose'); // Moved to a broader scope
+    const overlay = document.getElementById('compose');
     const composeBtn = document.querySelector('.ComposeBtn');
     const closeOverlayBtn = document.getElementById('closeOverlay');
     const newBlogForm = document.getElementById('newBlogForm');
+    const searchInput = document.querySelector('.search');
     let editMode = false;
     let editPostId = null;
 
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
     } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching user-name:', error);
     }
 
     if (signOutButton) {
@@ -88,9 +89,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
+    searchInput.addEventListener('input', function() {
+        loadRecentBlogs(this.value);
+    });
+
     loadRecentBlogs();
 
-    async function loadRecentBlogs() {
+    async function loadRecentBlogs(searchQuery = '') {
         const response = await fetch('/api/posts');
         if (response.ok) {
             const blogs = await response.json();
@@ -100,7 +105,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Clear existing blogs
             recentBlogsDiv.innerHTML = '<div class="blog-search"><p>Recent Blogs</p><input type="search" class="search" placeholder="Search"></div>';
 
-            blogs.forEach(blog => {
+            // Filter blogs based on search query
+            const filteredBlogs = blogs.filter(blog => {
+                const lowerCaseQuery = searchQuery.toLowerCase();
+                const matchesUsername = blog.author && blog.author.username && blog.author.username.toLowerCase().includes(lowerCaseQuery);
+                const matchesHeading = blog.heading.toLowerCase().includes(lowerCaseQuery);
+                const matchesTags = blog.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery));
+                return matchesUsername || matchesHeading || matchesTags;
+            });
+
+            filteredBlogs.forEach(blog => {
                 const blogBanner = blogBannerTemplate.cloneNode(true);
                 blogBanner.style.display = 'block';
                 if (blog.author) {
