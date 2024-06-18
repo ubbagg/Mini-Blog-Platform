@@ -1,20 +1,30 @@
 const mongoose = require('mongoose');
-// const { type } = require('os');
 
 const postSchema = new mongoose.Schema({
     author: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
-    title: String,
+    title: {
+        type: String,
+        required: true
+    },
     heading: String,
-    tags: [String],
+    tags: {
+        type: [String],
+        default: []
+    },
     content: String,
     image: String,
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
     }
 });
+
+// Indexes
+postSchema.index({ author: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Post', postSchema);
