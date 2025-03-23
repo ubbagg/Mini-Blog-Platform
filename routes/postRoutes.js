@@ -2,22 +2,22 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/post');
 const upload = require('../config/multer');
+const authMiddleware = require('../middleware/auth');
 
 // New post
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', authMiddleware, upload.single('image'), async (req, res) => {
     try {
-        if (!req.session.userID) {
-            return res.status(401).send({ error: 'Unauthorized' });
-        }
-        if (!req.body.heading || !req.body.tags || !req.body.content || !req.file) {
-            return res.status(400).send({ error: 'All fields required' });
+        const { title, heading, tags, content } = req.body;
+        if (!title || !heading || !tags || !content || !req.file) {
+            return res.status(400).send({ error: 'All fields are required' });
         }
 
         const newPost = new Post({
             author: req.session.userID,
-            heading: req.body.heading,
-            tags: req.body.tags.split(','),
-            content: req.body.content,
+            title,
+            heading,
+            tags: Array.isArray(tags) ? tags : tags.split(',').map(tag => tag.trim()),
+            content,
             image: req.file.filename
         });
 
@@ -44,8 +44,7 @@ router.get('/', async (req, res) => {
 // Single post by id
 router.get('/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const post = await Post.findById(id).populate('author', 'username');
+        const post = await Post.findById(req.params.id).populate('author', 'username');
         if (!post) {
             return res.status(404).send({ error: 'Post not found' });
         }
@@ -56,26 +55,25 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+
 // Edit post
-router.put('/:id', upload.single('image'), async (req, res) => {
+router.put('/:id', authMiddleware, upload.single('image'), async (req, res) => {
     try {
-        if (!req.session.userID) {
-            return res.status(401).send({ error: 'Unauthorized' });
-        }
         const { id } = req.params;
         const post = await Post.findById(id);
+
         if (!post) {
             return res.status(404).send({ error: 'Post not found' });
         }
 
-        // Check if the post author is the same as the logged-in user
         if (post.author.toString() !== req.session.userID) {
             return res.status(403).send({ error: 'Forbidden' });
         }
 
-        const { heading, tags, content } = req.body;
+        const { title, heading, tags, content } = req.body;
+        if (title) post.title = title;
         if (heading) post.heading = heading;
-        if (tags) post.tags = tags.split(',');
+        if (tags) post.tags = Array.isArray(tags) ? tags : tags.split(',').map(tag => tag.trim());
         if (content) post.content = content;
         if (req.file) post.image = req.file.filename;
 
@@ -90,23 +88,16 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
 
 // Delete post
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authMiddleware, async (req, res) => {
     try {
-        if (!req.session.userID) {
-            console.log('No user ID in session');
-            return res.status(401).send({ error: 'Unauthorized' });
-        }
-
         const { id } = req.params;
         const post = await Post.findById(id);
 
         if (!post) {
-            console.log('Post not found');
             return res.status(404).send({ error: 'Post not found' });
         }
 
-        if (!post.author || post.author.toString() !== req.session.userID) {
-            console.log(`Post author: ${post.author}, User ID: ${req.session.userID}`);
+        if (post.author.toString() !== req.session.userID) {
             return res.status(403).send({ error: 'Forbidden' });
         }
 
@@ -117,24 +108,5 @@ router.delete('/:id', async (req, res) => {
         res.status(400).send({ error: err.message });
     }
 });
-
-// delete when user is not defined
-// router.delete('/:id', async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const post = await Post.findById(id);
-
-//         if (!post) {
-//             console.log('Post not found');
-//             return res.status(404).send({ error: 'Post not found' });
-//         }
-
-//         await Post.findByIdAndDelete(id);
-//         res.send({ message: 'Post deleted' });
-//     } catch (err) {
-//         console.error('Error deleting post:', err);
-//         res.status(400).send({ error: err.message });
-//     }
-// });
 
 module.exports = router;

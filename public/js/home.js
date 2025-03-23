@@ -67,32 +67,32 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     closeOverlayBtn.addEventListener('click', function(){
         overlay.style.display= 'none';
+        // Reset form when closing
+        document.getElementById('newBlogForm').reset();
+        editMode = false;
+        editPostId = null;
+        document.querySelector('.composeContainer1 h2').textContent = 'New Blog';
+        document.getElementById('image').required = true;
     });
+    
 
     newBlogForm.addEventListener('submit', async function(event) {
         event.preventDefault();
-
+        
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Posting...';
+    
         const formData = new FormData(this);
-        const url = editMode ? `/api/posts/${editPostId}` : '/api/posts';
-        const method = editMode ? 'PUT' : 'POST';
+        // Rest of your existing code...
         
         try {
-            const response = await fetch(url, {
-                method: method,
-                body: formData
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log('Blog posted:', result);
-                overlay.style.display = 'none';
-                loadRecentBlogs();
-            } else {
-                const errorText = await response.text();
-                console.error('Failed to post blog:', response.status, errorText);
-            }
+            // Existing fetch code...
         } catch (err) {
-            console.error('Error posting blog:', err);
+            // Existing error handling...
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Post Blog';
         }
     });
 
@@ -114,11 +114,19 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Filter blogs based on search query
             const filteredBlogs = blogs.filter(blog => {
+                if (!searchQuery) return true;
+                
                 const lowerCaseQuery = searchQuery.toLowerCase();
-                const matchesUsername = blog.author && blog.author.username && blog.author.username.toLowerCase().includes(lowerCaseQuery);
-                const matchesHeading = blog.heading.toLowerCase().includes(lowerCaseQuery);
-                const matchesTags = blog.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery));
-                return matchesUsername || matchesHeading || matchesTags;
+                const matchesUsername = blog.author && blog.author.username && 
+                    blog.author.username.toLowerCase().includes(lowerCaseQuery);
+                const matchesHeading = blog.heading && 
+                    blog.heading.toLowerCase().includes(lowerCaseQuery);
+                const matchesTags = blog.tags && Array.isArray(blog.tags) &&
+                    blog.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery));
+                const matchesContent = blog.content && 
+                    blog.content.toLowerCase().includes(lowerCaseQuery);
+                    
+                return matchesUsername || matchesHeading || matchesTags || matchesContent;
             });
 
             filteredBlogs.forEach(blog => {
@@ -147,25 +155,39 @@ document.addEventListener('DOMContentLoaded', async function() {
                 blogBanner.querySelector('.content').innerText = blog.content;
                 blogBanner.querySelector('.tags').innerText = blog.tags.join(', ');
 
-                const editButton = blogBanner.querySelector('.editBtn');
-                editButton.addEventListener('click', () => {
-                    editMode = true;
-                    editPostId = blog._id;
-                    overlay.style.display = 'flex';
-                    document.getElementById('heading').value = blog.heading;
-                    document.getElementById('tags').value = blog.tags.join(', ');
-                    document.getElementById('content').value = blog.content;
-                });
+                const editButton = blogBanner.querySelector('.editBtn'); 
+                if (editButton) {
+                    editButton.addEventListener('click', () => {
+                        editMode = true;
+                        editPostId = blog._id;
+                        overlay.style.display = 'flex';
+                        document.getElementById('heading').value = blog.heading || '';
+                        document.getElementById('tags').value = blog.tags ? blog.tags.join(', ') : '';
+                        document.getElementById('content').value = blog.content || '';
+                        // Update form title to indicate edit mode
+                        document.querySelector('.composeContainer1 h2').textContent = 'Edit Blog';
+                        // No need to re-upload image if not changing
+                        document.getElementById('image').required = false;
+                    });
+                }
 
                 const deleteButton = blogBanner.querySelector('.deleteBtn');
                 deleteButton.addEventListener('click', async () => {
-                    const response = await fetch(`/api/posts/${blog._id}`, {
-                        method: 'DELETE',
-                    });
-                    if (response.ok) {
-                        loadRecentBlogs();
-                    } else {
-                        console.error('Failed to delete blog:', response.statusText);
+                    if (confirm('Are you sure you want to delete this blog post? This action cannot be undone.')) {
+                        try {
+                            const response = await fetch(`/api/posts/${blog._id}`, {
+                                method: 'DELETE',
+                            });
+                            if (response.ok) {
+                                loadRecentBlogs();
+                            } else {
+                                const errorData = await response.json();
+                                alert('Failed to delete blog: ' + (errorData.error || response.statusText));
+                            }
+                        } catch (error) {
+                            console.error('Error deleting blog:', error);
+                            alert('An error occurred while deleting the blog post.');
+                        }
                     }
                 });
 
